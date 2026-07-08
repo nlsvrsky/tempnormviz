@@ -208,7 +208,7 @@ w2 = st.slider(r"$w^\text{cue-2}$", min_value=.01, max_value=10.0, value=3.3, st
 w3 = st.slider(r"$w^\text{cue-3}$", min_value=.01, max_value=10.0, value=.001, step=.01, key="w3")
 w4 = st.slider(r"$w^\text{cue-4}$", min_value=.01, max_value=10.0, value=2.5, step=.01, key="w4")
 scale_rwd = st.slider(r"$w^\text{rwd}$", min_value=.01, max_value=50.0, value=1.1, step=.01, key="scale_rwd")
-m = st.slider(r"$m$ (this just scales the entire output response by a constant)", min_value=.5, max_value=10.0, value==5.5, step=.5, key="m")
+m = st.slider(r"$m$ (this just scales the entire output response by a constant)", min_value=.5, max_value=10.0, value=5.5, step=.5, key="m")
 
 st.line_chart(df3)
 
