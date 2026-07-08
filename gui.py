@@ -105,21 +105,21 @@ def wrap_simulate(args):
 
 if "params_set" not in st.session_state:
     st.session_state["params_set"] = True
-    tau1=3, 
-    t1r=11.25
-    sigma1=.5
-    sigma1r=1
-    tauE1=.015 
-    tauS1=.01
-    E1r=70
-    S1r=70
-    tau2=7.5 
-    sigma2=.1
-    sigma2r=1
-    tauE2=5 
-    tauS2=10 
-    E2r=10
-    S2r=5
+    tau1 = 3 
+    t1r = 11.25
+    sigma1 = .5
+    sigma1r = 1
+    tauE1 = .015 
+    tauS1 = .01
+    E1r = 70
+    S1r = 70
+    tau2 = 7.5 
+    sigma2 = .1
+    sigma2r = 1
+    tauE2 = 5 
+    tauS2 = 10 
+    E2r = 10
+    S2r = 5
     tau3 = 9
     sigma3 = .02
     tauE3 = 145.0
