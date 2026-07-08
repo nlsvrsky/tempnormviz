@@ -6,28 +6,26 @@ def simulate(cue,
              predW,
              dt=2, 
              T=12*1000,  
-             tau1=7.5, 
-             t1r=4,
-             sigma1=2,
-             sigma1r=.1,
-             tauE1=.03, 
-             tauS1=.02,
-             E1r=250,
-             S1r=250,
+             tau1=3, 
+             t1r=11.25,
+             sigma1=.5,
+             sigma1r=1,
+             tauE1=.015, 
+             tauS1=.01,
+             E1r=70,
+             S1r=70,
              tau2=7.5, 
-             sigma2=10,
-             sigma2r=.05,
-             tauE2=.03, 
-             tauS2=.02, 
-             E2r=750,
-             S2r=1250,
+             sigma2=.1,
+             sigma2r=1,
+             tauE2=5, 
+             tauS2=10, 
+             E2r=10,
+             S2r=5,
              tau3=100,
              sigma3=.025,
              tauE3=100,
              tauS3=50*150, 
              p=1.5,
-             b_excit=50,
-             b2_excit=.025,
              b=.1, b2=.1):
     
     
@@ -46,11 +44,6 @@ def simulate(cue,
     drive1, d1, s1, f1, r1 = np.zeros((5, nt)), np.zeros((5, nt)), np.zeros((5, nt)), np.zeros((5, nt)), np.zeros((5, nt))
     drive2, d2, s2, f2, r2 = np.zeros((5, nt)), np.zeros((5, nt)), np.zeros((5, nt)), np.zeros((5, nt)), np.zeros((5, nt))
     drive3, d3, s3, f3, r3 = np.zeros(nt), np.zeros(nt), np.zeros(nt), np.zeros(nt), np.zeros(nt)
-
-    rb = np.zeros((2, nt))
-    
-    cue[:4] += .0005 
-    cue[4] += .0005 
     
     # simulate
     for i in range(1, nt):
@@ -69,27 +62,23 @@ def simulate(cue,
         d2[4, i] = np.sum(drive2[4, :i] * tempWE2_r[i-1::-1]) 
         s2[:4, i] = np.sum(np.abs(d2[:4, :i]) * tempWS2[i-1::-1], axis=1) 
         s2[4, i] = np.sum(np.abs(d2[4, :i]) * tempWS2_r[i-1::-1]) 
-        f2[:4, i] = d2[:4, i] / (np.abs(s2[:4, i]).sum() + (sigma2)**p) 
-        f2[4, i] = d2[4, i] / (np.abs(s2[4, i]).sum() + (sigma2r)**p) 
-        b_supped = b_excit / (s2[:4, i].sum() + (sigma2)**p) 
-        b2_supped = b2_excit / (s2[4, i].sum() + (sigma2r)**p) 
+        f2[:4, i] = (d2[:4, i] + b) / (np.abs(s2[:4, i]).sum() + (sigma2)**p) 
+        f2[4, i] = (d2[4, i] + b2) / (np.abs(s2[4, i]).sum() + (sigma2r)**p) 
         r2[:4, i] = r2[:4, i-1] + dt/(tau2)*(-r2[:4, i-1]+f2[:4, i]) 
         r2[4, i] = r2[4, i-1] + dt/(tau2)*(-r2[4, i-1]+f2[4, i]) 
-        rb[0, i] = rb[0, i-1] + dt/(tau2)*(-rb[0, i-1]+b_supped)
-        rb[1, i] = rb[1, i-1] + dt/(tau2)*(-rb[1, i-1]+b2_supped)
         
         
-        drive3[i] = max(0, predW @ r2[:, i] + b*rb[0, i] + b2*rb[1, i])**p 
+        drive3[i] = max(0, predW @ r2[:, i])**p 
         d3[i] = np.sum(drive3[:i] * tempWE3[i-1::-1]) 
         s3[i] = np.sum(np.abs(d3[:i]) * tempWS3[i-1::-1])
         f3[i] = (d3[i]) / (s3[i] + sigma3**p) 
         r3[i] = r3[i-1] + dt/tau3*(-r3[i-1]+f3[i]) 
     
 
-    return r1, r2, rb, r3 
+    return r1, r2, r3 
 
 def wrap_simulate(args):
-    tau1, t1r, sigma1, sigma1r, tauE1, tauS1, E1r, S1r, tau2, sigma2, sigma2r, tauE2, tauS2, E2r, S2r, tau3, sigma3, tauE3, tauS3, m, w1, w2, w3, w4, scale_rwd, b_excit, b2_excit, b, b2 = args 
+    tau1, t1r, sigma1, sigma1r, tauE1, tauS1, E1r, S1r, tau2, sigma2, sigma2r, tauE2, tauS2, E2r, S2r, tau3, sigma3, tauE3, tauS3, m, w1, w2, w3, w4, scale_rwd, b, b2 = args 
     cue = np.zeros((5, 644))
     cue[0, 244:294] = 1 
     dt = 2
@@ -100,45 +89,41 @@ def wrap_simulate(args):
     soas = [0, 1500//20, 3000//20, 6000//20]
     r1s = []
     r2s = []
-    rbs = []
     r3s = []
 
     for i, soa in enumerate(soas):
         cue = np.zeros((5, 644))
         cue[i, 244:294] = 1 #294
         cue[4, 244+soa:244+soa+50] = 1
-        r1, r2, rb, r3 = simulate(cue, predW, tau1=tau1, sigma1=sigma1, sigma1r=sigma1r, tauE1=tauE1, tauS1=tauS1, E1r=E1r, S1r=S1r, tau2=tau2, sigma2=sigma2, sigma2r=sigma2r, tauE2=tauE2, tauS2=tauS2, E2r=E2r, S2r=S2r, tau3=tau3, sigma3=sigma3, tauE3=tauE3, tauS3=tauS3, dt=dt, T=T, p=p, b_excit=b_excit, b2_excit=b2_excit, b=b, b2=b2) 
+        r1, r2, r3 = simulate(cue, predW, tau1=tau1, sigma1=sigma1, sigma1r=sigma1r, tauE1=tauE1, tauS1=tauS1, E1r=E1r, S1r=S1r, tau2=tau2, sigma2=sigma2, sigma2r=sigma2r, tauE2=tauE2, tauS2=tauS2, E2r=E2r, S2r=S2r, tau3=tau3, sigma3=sigma3, tauE3=tauE3, tauS3=tauS3, dt=dt, T=T, p=p, b_excit=b_excit, b2_excit=b2_excit, b=b, b2=b2) 
         r3 = m*r3
         r1s.append(r1)
         r2s.append(r2)
-        rbs.append(rb)
         r3s.append(r3)
 
-    return r1s, r2s, rbs, r3s
+    return r1s, r2s, r3s
 
 if "params_set" not in st.session_state:
     st.session_state["params_set"] = True
-    tau1 = 7.5
-    t1r = 4.0
-    sigma1 = 2.0
-    sigma1r = .1
-    tauE1 = .03
-    tauS1 = .02
-    E1r = 250.0
-    S1r = 250.0
-    tau2 = 7.5
-    sigma2 = 10
-    sigma2r = .05
-    tauE2 = .03
-    tauS2 = .02
-    E2r = 750.0
-    S2r = 1250.0
+    tau1=3, 
+    t1r=11.25
+    sigma1=.5
+    sigma1r=1
+    tauE1=.015 
+    tauS1=.01
+    E1r=70
+    S1r=70
+    tau2=7.5 
+    sigma2=.1
+    sigma2r=1
+    tauE2=5 
+    tauS2=10 
+    E2r=10
+    S2r=5
     tau3 = 9
     sigma3 = .02
     tauE3 = 145.0
     tauS3 = 3.0
-    b_excit = 50
-    b2_excit = .025
     w1 = .08
     w2 = 3.5
     w3 = 3.5
@@ -178,23 +163,22 @@ else:
     b2 = st.session_state.b2
     m = st.session_state.m
 
-r1s, r2s, rbs, r3s = wrap_simulate((tau1, t1r, sigma1, sigma1r, tauE1, tauS1, E1r, S1r, tau2, sigma2, sigma2r, tauE2, tauS2, E2r, S2r, tau3, sigma3, tauE3, tauS3, m, w1, w2, w3, w4, scale_rwd, b_excit, b2_excit, b, b2))
+r1s, r2s, r3s = wrap_simulate((tau1, t1r, sigma1, sigma1r, tauE1, tauS1, E1r, S1r, tau2, sigma2, sigma2r, tauE2, tauS2, E2r, S2r, tau3, sigma3, tauE3, tauS3, m, w1, w2, w3, w4, scale_rwd, b, b2))
 df1 = pd.DataFrame({"S1-cue": r1s[0][0], "S1-rwd": r1s[2][-1]})
 df2 = pd.DataFrame({"S2-cue": r2s[0][0], "S2-rwd": r2s[2][-1]})
-dfb = pd.DataFrame({"b-cue": rbs[0][0], "b-rwd": rbs[2][-1]})
 df3 = pd.DataFrame({"R-cue1": r3s[0], "R-cue2": r3s[1], "R-cue3": r3s[2], "R-cue4": r3s[3]})
 
 
 st.markdown("# Sensory 1 (S1)")
 
-tau1 = st.slider(r"$\tau^\text{cue}_R$", min_value=1.0, max_value=100.0, value=7.5, step=1.0, key="tau1")
-t1r = st.slider(r"$\frac{\tau^\text{rwd}_R}{\tau^\text{cue}_R}$ (i.e., $\tau_R$ for S1-reward neurons relative to S1-cue neurons)", min_value=1.0, max_value=100.0, value=7.5, step=1.0, key="t1r")
-sigma1 = st.slider(r"$\sigma^\text{cue}$", min_value=.01, max_value=100.0, value=2.0, step=.01, key="sigma1")
-sigma1r = st.slider(r"$\sigma^\text{cue}$", min_value=.01, max_value=100.0, value=.1, step=.01, key="sigma1r")
-tauE1 = st.slider(r"$\tau^\text{cue}_E$", min_value=.01, max_value=100.0, value=.03, step=.01, key="tauE1")
-tauS1 = st.slider(r"$\tau^\text{cue}_S$", min_value=.01, max_value=100.0, value=.02, step=.01, key="tauS1")
-E1r = st.slider(r"$\frac{\tau^\text{rwd}_E}{\tau^\text{cue}_E}$", min_value=1.0, max_value=1000.0, value=250.0, step=1.0, key="E1r")
-S1r = st.slider(r"$\frac{\tau^\text{rwd}_S}{\tau^\text{cue}_S}$", min_value=1.0, max_value=1000.0, value=250.0, step=1.0, key="S1r")
+tau1 = st.slider(r"$\tau^\text{cue}_R$", min_value=1.0, max_value=100.0, value=3.0, step=1.0, key="tau1")
+t1r = st.slider(r"$\frac{\tau^\text{rwd}_R}{\tau^\text{cue}_R}$ (i.e., $\tau_R$ for S1-reward neurons relative to S1-cue neurons)", min_value=1.0, max_value=100.0, value=11.25, step=1.0, key="t1r")
+sigma1 = st.slider(r"$\sigma^\text{cue}$", min_value=.01, max_value=100.0, value=.5, step=.01, key="sigma1")
+sigma1r = st.slider(r"$\sigma^\text{cue}$", min_value=.01, max_value=100.0, value=1.0, step=.01, key="sigma1r")
+tauE1 = st.slider(r"$\tau^\text{cue}_E$", min_value=.01, max_value=100.0, value=.015, step=.01, key="tauE1")
+tauS1 = st.slider(r"$\tau^\text{cue}_S$", min_value=.01, max_value=100.0, value=.01, step=.01, key="tauS1")
+E1r = st.slider(r"$\frac{\tau^\text{rwd}_E}{\tau^\text{cue}_E}$", min_value=1.0, max_value=1000.0, value=70.0, step=1.0, key="E1r")
+S1r = st.slider(r"$\frac{\tau^\text{rwd}_S}{\tau^\text{cue}_S}$", min_value=1.0, max_value=1000.0, value=70.0, step=1.0, key="S1r")
 
 st.line_chart(df1)
 
@@ -202,17 +186,16 @@ st.line_chart(df1)
 st.markdown("# Sensory 2 (S2)")
 
 tau2 = st.slider(r"$\tau_R$", min_value=1.0, max_value=100.0, value=7.5, step=.1, key="tau2")
-sigma2 = st.slider(r"$\sigma^\text{cue}$", min_value=.01, max_value=100.0, value=10.0, step=.01, key="sigma2")
-sigma2r = st.slider(r"$\sigma^\text{cue}$", min_value=.01, max_value=100.0, value=.05, step=.01, key="sigma2r")
-tauE2 = st.slider(r"$\tau^\text{cue}_E$", min_value=.01, max_value=100.0, value=.03, step=.01, key="tauE2")
-tauS2 = st.slider(r"$\tau^\text{cue}_S$", min_value=.01, max_value=100.0, value=.02, step=.01, key="tauS2")
-E2r = st.slider(r"$\frac{\tau^\text{rwd}_E}{\tau^\text{cue}_E}$", min_value=1.0, max_value=10000.0, value=750.0, step=1.0, key="E2r")
-S2r = st.slider(r"$\frac{\tau^\text{rwd}_S}{\tau^\text{cue}_S}$", min_value=1.0, max_value=10000.0, value=1250.0, step=1.0, key="S2r")
-b_excit = st.slider(r"$e^\text{cue}_\text{baseline}$ (i.e., constant excitatory drive for baseline neurons that are part of the cue population)", min_value=1.0, max_value=200.0, value=50.0, step=.1, key="b_excit")
-b2_excit = st.slider(r"$e^\text{rwd}_\text{baseline}$", min_value=.01, max_value=100.0, value=.025, step=.01, key="b2_excit")
+sigma2 = st.slider(r"$\sigma^\text{cue}$", min_value=.01, max_value=100.0, value=.1, step=.01, key="sigma2")
+sigma2r = st.slider(r"$\sigma^\text{cue}$", min_value=.01, max_value=100.0, value=1.0, step=.01, key="sigma2r")
+tauE2 = st.slider(r"$\tau^\text{cue}_E$", min_value=.01, max_value=100.0, value=5.0, step=.01, key="tauE2")
+tauS2 = st.slider(r"$\tau^\text{cue}_S$", min_value=.01, max_value=100.0, value=10.0, step=.01, key="tauS2")
+E2r = st.slider(r"$\frac{\tau^\text{rwd}_E}{\tau^\text{cue}_E}$", min_value=1.0, max_value=10000.0, value=10.0, step=1.0, key="E2r")
+S2r = st.slider(r"$\frac{\tau^\text{rwd}_S}{\tau^\text{cue}_S}$", min_value=1.0, max_value=10000.0, value=5.0, step=1.0, key="S2r")
+b = st.slider(r"$e^\text{cue}_\text{baseline}$ (i.e., constant excitatory drive for baseline neurons that are part of the cue population)", min_value=1.0, max_value=200.0, value=.1, step=.1, key="b")
+b2 = st.slider(r"$e^\text{rwd}_\text{baseline}$", min_value=.01, max_value=100.0, value=.1, step=.01, key="b2")
 
 st.line_chart(df2)
-st.line_chart(dfb)
 
 
 st.markdown("# Reward (R)")
@@ -226,8 +209,6 @@ w2 = st.slider(r"$w^\text{cue-2}$", min_value=.01, max_value=10.0, value=3.5, st
 w3 = st.slider(r"$w^\text{cue-3}$", min_value=.01, max_value=10.0, value=3.5, step=.01, key="w3")
 w4 = st.slider(r"$w^\text{cue-4}$", min_value=.01, max_value=10.0, value=3.8, step=.01, key="w4")
 scale_rwd = st.slider(r"$w^\text{rwd}$", min_value=.01, max_value=50.0, value=20.0, step=.01, key="scale_rwd")
-b = st.slider(r"$w^\text{cue}_\text{baseline}$", min_value=.5, max_value=50.0, value=.5, step=.1, key="b")
-b2 = st.slider(r"$w^\text{rwd}_\text{baseline}$", min_value=.00001, max_value=50.0, value=.0002, step=.00001, key="b2")
 m = st.slider(r"$m$ (this just scales the entire output response by a constant)", min_value=.5, max_value=10.0, value=7.5, step=.5, key="m")
 
 st.line_chart(df3)
