@@ -109,14 +109,14 @@ if "params_set" not in st.session_state:
     tau1 = 3 
     t1r = 11.25
     sigma1 = .5
-    sigma1r = 1
+    sigma1r = .5
     tauE1 = .015 
     tauS1 = .01
     E1r = 70
     S1r = 70
     tau2 = 7.5 
     sigma2 = .1
-    sigma2r = 1
+    sigma2r = .1
     tauE2 = 5 
     tauS2 = 10 
     E2r = 10
@@ -173,7 +173,7 @@ st.markdown("# Sensory 1 (S1)")
 tau1 = st.slider(r"$\tau^\text{cue}_R$", min_value=1.0, max_value=100.0, value=3.0, step=1.0, key="tau1")
 t1r = st.slider(r"$\frac{\tau^\text{rwd}_R}{\tau^\text{cue}_R}$ (i.e., $\tau_R$ for S1-reward neurons relative to S1-cue neurons)", min_value=1.0, max_value=100.0, value=11.25, step=1.0, key="t1r")
 sigma1 = st.slider(r"$\sigma^\text{cue}$", min_value=.01, max_value=100.0, value=.5, step=.01, key="sigma1")
-sigma1r = st.slider(r"$\sigma^\text{cue}$", min_value=.01, max_value=100.0, value=1.0, step=.01, key="sigma1r")
+sigma1r = st.slider(r"$\sigma^\text{cue}$", min_value=.01, max_value=100.0, value=.5, step=.01, key="sigma1r")
 tauE1 = st.slider(r"$\tau^\text{cue}_E$", min_value=.01, max_value=100.0, value=.015, step=.01, key="tauE1")
 tauS1 = st.slider(r"$\tau^\text{cue}_S$", min_value=.01, max_value=100.0, value=.01, step=.01, key="tauS1")
 E1r = st.slider(r"$\frac{\tau^\text{rwd}_E}{\tau^\text{cue}_E}$", min_value=1.0, max_value=1000.0, value=70.0, step=1.0, key="E1r")
@@ -186,7 +186,7 @@ st.markdown("# Sensory 2 (S2)")
 
 tau2 = st.slider(r"$\tau_R$", min_value=1.0, max_value=100.0, value=7.5, step=.1, key="tau2")
 sigma2 = st.slider(r"$\sigma^\text{cue}$", min_value=.01, max_value=100.0, value=.1, step=.01, key="sigma2")
-sigma2r = st.slider(r"$\sigma^\text{cue}$", min_value=.01, max_value=100.0, value=1.0, step=.01, key="sigma2r")
+sigma2r = st.slider(r"$\sigma^\text{cue}$", min_value=.01, max_value=100.0, value=.1, step=.01, key="sigma2r")
 tauE2 = st.slider(r"$\tau^\text{cue}_E$", min_value=.01, max_value=100.0, value=5.0, step=.01, key="tauE2")
 tauS2 = st.slider(r"$\tau^\text{cue}_S$", min_value=.01, max_value=100.0, value=10.0, step=.01, key="tauS2")
 E2r = st.slider(r"$\frac{\tau^\text{rwd}_E}{\tau^\text{cue}_E}$", min_value=1.0, max_value=10000.0, value=10.0, step=1.0, key="E2r")
