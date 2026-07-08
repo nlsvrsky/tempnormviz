@@ -193,8 +193,8 @@ tauE2 = st.slider(r"$\tau^\text{cue}_E$", min_value=.01, max_value=100.0, value=
 tauS2 = st.slider(r"$\tau^\text{cue}_S$", min_value=.01, max_value=100.0, value=10.0, step=.01, key="tauS2")
 E2r = st.slider(r"$\frac{\tau^\text{rwd}_E}{\tau^\text{cue}_E}$", min_value=1.0, max_value=10000.0, value=10.0, step=1.0, key="E2r")
 S2r = st.slider(r"$\frac{\tau^\text{rwd}_S}{\tau^\text{cue}_S}$", min_value=1.0, max_value=10000.0, value=5.0, step=1.0, key="S2r")
-b = st.slider(r"$e^\text{cue}_\text{baseline}$ (i.e., constant excitatory drive for baseline neurons that are part of the cue population)", min_value=1.0, max_value=200.0, value=.1, step=.1, key="b")
-b2 = st.slider(r"$e^\text{rwd}_\text{baseline}$", min_value=.01, max_value=100.0, value=.1, step=.01, key="b2")
+b = st.slider(r"$b_\text{cue}$ (baseline for cue neurons)", min_value=1.0, max_value=200.0, value=.1, step=.1, key="b")
+b2 = st.slider(r"$b_\text{rwd}$", min_value=.01, max_value=100.0, value=.1, step=.01, key="b2")
 
 st.line_chart(df2)
 
