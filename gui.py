@@ -121,10 +121,10 @@ if "params_set" not in st.session_state:
     tauS2 = 10 
     E2r = 10
     S2r = 5
-    tau3 = 9
-    sigma3 = .02
-    tauE3 = 145.0
-    tauS3 = 3.0
+    tau3 = 2
+    sigma3 = 2.6
+    tauE3 = 3
+    tauS3 = 6.2
     w1 = 5.8
     w2 = 3.3
     w3 = .001
