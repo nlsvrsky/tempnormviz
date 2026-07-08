@@ -131,7 +131,7 @@ if "params_set" not in st.session_state:
     w4 = 2.5
     scale_rwd = 20.0
     b = .04
-    b2 = .00001
+    b2 = .00005
     m = 5.5
 else:
     tau1 = st.session_state.tau1
@@ -192,7 +192,7 @@ tauS2 = st.slider(r"$\tau^\text{cue}_S$", min_value=.01, max_value=100.0, value=
 E2r = st.slider(r"$\frac{\tau^\text{rwd}_E}{\tau^\text{cue}_E}$", min_value=1.0, max_value=10000.0, value=10.0, step=1.0, key="E2r")
 S2r = st.slider(r"$\frac{\tau^\text{rwd}_S}{\tau^\text{cue}_S}$", min_value=1.0, max_value=10000.0, value=5.0, step=1.0, key="S2r")
 b = st.slider(r"$b_\text{cue}$ (baseline for cue neurons)", min_value=.00001, max_value=1.0, value=.04, step=.00001, key="b")
-b2 = st.slider(r"$b_\text{rwd}$", min_value=.00001, max_value=100.0, value=.0001, step=.00001, key="b2")
+b2 = st.slider(r"$b_\text{rwd}$", min_value=.00001, max_value=100.0, value=.00005, step=.00001, key="b2")
 
 st.line_chart(df2)
 
