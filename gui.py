@@ -95,7 +95,7 @@ def wrap_simulate(args):
         cue = np.zeros((5, 644))
         cue[i, 244:294] = 1 #294
         cue[4, 244+soa:244+soa+50] = 1
-        r1, r2, r3 = simulate(cue, predW, tau1=tau1, sigma1=sigma1, sigma1r=sigma1r, tauE1=tauE1, tauS1=tauS1, E1r=E1r, S1r=S1r, tau2=tau2, sigma2=sigma2, sigma2r=sigma2r, tauE2=tauE2, tauS2=tauS2, E2r=E2r, S2r=S2r, tau3=tau3, sigma3=sigma3, tauE3=tauE3, tauS3=tauS3, dt=dt, T=T, p=p, b_excit=b_excit, b2_excit=b2_excit, b=b, b2=b2) 
+        r1, r2, r3 = simulate(cue, predW, tau1=tau1, sigma1=sigma1, sigma1r=sigma1r, tauE1=tauE1, tauS1=tauS1, E1r=E1r, S1r=S1r, tau2=tau2, sigma2=sigma2, sigma2r=sigma2r, tauE2=tauE2, tauS2=tauS2, E2r=E2r, S2r=S2r, tau3=tau3, sigma3=sigma3, tauE3=tauE3, tauS3=tauS3, dt=dt, T=T, p=p, b=b, b2=b2) 
         r3 = m*r3
         r1s.append(r1)
         r2s.append(r2)
