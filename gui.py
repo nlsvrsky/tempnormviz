@@ -125,14 +125,14 @@ if "params_set" not in st.session_state:
     sigma3 = .02
     tauE3 = 145.0
     tauS3 = 3.0
-    w1 = .08
-    w2 = 3.5
-    w3 = 3.5
-    w4 = 4.8
+    w1 = 5.8
+    w2 = 3.3
+    w3 = .001
+    w4 = 2.5
     scale_rwd = 20.0
-    b = .5
-    b2 = .0002
-    m = 7.5
+    b = .04
+    b2 = .00001
+    m = 5.5
 else:
     tau1 = st.session_state.tau1
     t1r = st.session_state.t1r
@@ -191,24 +191,24 @@ tauE2 = st.slider(r"$\tau^\text{cue}_E$", min_value=.01, max_value=100.0, value=
 tauS2 = st.slider(r"$\tau^\text{cue}_S$", min_value=.01, max_value=100.0, value=10.0, step=.01, key="tauS2")
 E2r = st.slider(r"$\frac{\tau^\text{rwd}_E}{\tau^\text{cue}_E}$", min_value=1.0, max_value=10000.0, value=10.0, step=1.0, key="E2r")
 S2r = st.slider(r"$\frac{\tau^\text{rwd}_S}{\tau^\text{cue}_S}$", min_value=1.0, max_value=10000.0, value=5.0, step=1.0, key="S2r")
-b = st.slider(r"$b_\text{cue}$ (baseline for cue neurons)", min_value=1.0, max_value=200.0, value=.1, step=.1, key="b")
-b2 = st.slider(r"$b_\text{rwd}$", min_value=.01, max_value=100.0, value=.1, step=.01, key="b2")
+b = st.slider(r"$b_\text{cue}$ (baseline for cue neurons)", min_value=.00001, max_value=1.0, value=.04, step=.00001, key="b")
+b2 = st.slider(r"$b_\text{rwd}$", min_value=.00001, max_value=100.0, value=.0001, step=.00001, key="b2")
 
 st.line_chart(df2)
 
 
 st.markdown("# Reward (R)")
 
-tau3 = st.slider(r"$\tau_R$", min_value=1.0, max_value=200.0, value=9.0, step=.1, key="tau3")
-sigma3 = st.slider(r"$\sigma$", min_value=.01, max_value=100.0, value=.02, step=.01, key="sigma3")
-tauE3 = st.slider(r"$\tau_E$", min_value=.01, max_value=200.0, value=145.0, step=.01, key="tauE3")
-tauS3 = st.slider(r"$\tau_S$", min_value=.01, max_value=200.0, value=3.0, step=.01, key="tauS3")
-w1 = st.slider(r"$w^\text{cue-1}$", min_value=.01, max_value=10.0, value=.08, step=.01, key="w1")
-w2 = st.slider(r"$w^\text{cue-2}$", min_value=.01, max_value=10.0, value=3.5, step=.01, key="w2")
-w3 = st.slider(r"$w^\text{cue-3}$", min_value=.01, max_value=10.0, value=3.5, step=.01, key="w3")
-w4 = st.slider(r"$w^\text{cue-4}$", min_value=.01, max_value=10.0, value=3.8, step=.01, key="w4")
-scale_rwd = st.slider(r"$w^\text{rwd}$", min_value=.01, max_value=50.0, value=20.0, step=.01, key="scale_rwd")
-m = st.slider(r"$m$ (this just scales the entire output response by a constant)", min_value=.5, max_value=10.0, value=7.5, step=.5, key="m")
+tau3 = st.slider(r"$\tau_R$", min_value=1.0, max_value=200.0, value=2.0, step=.1, key="tau3")
+sigma3 = st.slider(r"$\sigma$", min_value=.01, max_value=100.0, value=2.6, step=.01, key="sigma3")
+tauE3 = st.slider(r"$\tau_E$", min_value=.01, max_value=200.0, value=3.0, step=.01, key="tauE3")
+tauS3 = st.slider(r"$\tau_S$", min_value=.01, max_value=200.0, value=6.2, step=.01, key="tauS3")
+w1 = st.slider(r"$w^\text{cue-1}$", min_value=.01, max_value=10.0, value=5.8, step=.01, key="w1")
+w2 = st.slider(r"$w^\text{cue-2}$", min_value=.01, max_value=10.0, value=3.3, step=.01, key="w2")
+w3 = st.slider(r"$w^\text{cue-3}$", min_value=.01, max_value=10.0, value=.001, step=.01, key="w3")
+w4 = st.slider(r"$w^\text{cue-4}$", min_value=.01, max_value=10.0, value=2.5, step=.01, key="w4")
+scale_rwd = st.slider(r"$w^\text{rwd}$", min_value=.01, max_value=50.0, value=1.1, step=.01, key="scale_rwd")
+m = st.slider(r"$m$ (this just scales the entire output response by a constant)", min_value=.5, max_value=10.0, value==5.5, step=.5, key="m")
 
 st.line_chart(df3)
 
