@@ -66,7 +66,7 @@ def simulate(cue,
         f2[:4, i] = (d2[:4, i] + b) / (np.abs(s2[:4, i]).sum() + (sigma2)**p) 
         f2[4, i] = (d2[4, i] + b2) / (np.abs(s2[4, i]).sum() + (sigma2r)**p) 
         r2[:4, i] = r2[:4, i-1] + dt/(tau2)*(-r2[:4, i-1]+f2[:4, i]) 
-        r2[4, i] = r2[4, i-1] + dt/(tau2)*(-r2[4, i-1]+f2[4, i]) 
+        r2[4, i] = r2[4, i-1] + dt/(tau2*2)*(-r2[4, i-1]+f2[4, i]) 
         
         
         drive3[i] = max(0, predW @ r2[:, i])**p 
