@@ -153,8 +153,6 @@ else:
     sigma3 = st.session_state.sigma3
     tauE3 = st.session_state.tauE3
     tauS3 = st.session_state.tauS3
-    b_excit = st.session_state.b_excit
-    b2_excit = st.session_state.b2_excit
     w1 = st.session_state.w1
     w2 = st.session_state.w2
     w3 = st.session_state.w3
