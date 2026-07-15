@@ -66,7 +66,7 @@ def simulate(cue,
         r1[:4, i] = r1[:4, i-1] + dt/(tau1)*(-r1[:4, i-1]+f1[:4, i]) 
         r1[4, i] = r1[4, i-1] + dt/(tau1*t1r)*(-r1[4, i-1]+f1[4, i]) 
 
-        drive2[:4, i] = (r1[:4, i]/250)**p
+        drive2[:4, i] = (r1[:4, i]/10)**p
         drive2[4, i] = (r1[4, i]/.30)**p
         d2[:4, i] = np.sum(drive2[:4, :i] * tempWE2[i-1::-1], axis=1) 
         d2[4, i] = np.sum(drive2[4, :i] * tempWE2_r[i-1::-1]) 
