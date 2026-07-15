@@ -28,6 +28,15 @@ def simulate(cue,
              p=1.5,
              b=.1, b2=.1):
     
+    tau1 *= 10
+    tauE1 *= 10
+    tauS1 *= 10
+    tau2 *= 10
+    tauE2 *= 10
+    tauS2 *= 10
+    tau3 *= 10
+    tauE3 *= 10
+    tauS3 *= 10
     
     # initialize 
     nt = T // dt
