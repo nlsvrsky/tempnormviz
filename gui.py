@@ -82,20 +82,26 @@ def wrap_simulate(args):
     tau1, t1r, sigma1, sigma1r, tauE1, tauS1, E1r, S1r, tau2, sigma2, sigma2r, tauE2, tauS2, E2r, S2r, tau3, sigma3, tauE3, tauS3, m, w1, w2, w3, w4, scale_rwd, b, b2 = args 
     cue = np.zeros((5, 644))
     cue[0, 244:294] = 1 
-    dt = 2
-    T = 644*2
+    dt = 4
+    dt_psth = 20
+    T = 644*dt_psth
+    nt = T // dt
     p = 1.5
     predW = np.array([w1, w2, w3, w4, scale_rwd])
 
-    soas = [0, 1500//20, 3000//20, 6000//20]
+    soas = [0, 1500//dt, 3000//dt, 6000//dt]
     r1s = []
     r2s = []
     r3s = []
 
     for i, soa in enumerate(soas):
-        cue = np.zeros((5, 644))
-        cue[i, 244:294] = 1 #294
-        cue[4, 244+soa:244+soa+50] = 1
+        cue = np.zeros((5, nt))
+        cue_onset = 244*dt_psth//dt
+        cue_offset = 294*dt_psth//dt
+        rwd_onset = cue_onset + soa
+        rwd_offset = rwd_onset + 1000//dt
+        cue[i, cue_onset:cue_offset] = 1 #294
+        cue[4, rwd_onset:rwd_offset] = 1
         r1, r2, r3 = simulate(cue, predW, tau1=tau1, sigma1=sigma1, sigma1r=sigma1r, tauE1=tauE1, tauS1=tauS1, E1r=E1r, S1r=S1r, tau2=tau2, sigma2=sigma2, sigma2r=sigma2r, tauE2=tauE2, tauS2=tauS2, E2r=E2r, S2r=S2r, tau3=tau3, sigma3=sigma3, tauE3=tauE3, tauS3=tauS3, dt=dt, T=T, p=p, b=b, b2=b2) 
         r3 = m*r3
         r1s.append(r1)
